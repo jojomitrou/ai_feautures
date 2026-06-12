@@ -143,7 +143,26 @@ set BIGQUERY_LOCATION=EU
 
 ---
 
-## Step 8 — Start Claude Code in VS Code
+## Step 8 — Connect Jira (Atlassian)
+
+Jira lets Claude read your tickets, check sprint status, and update issues directly from VS Code — no tab switching needed.
+
+The Jira connection is bundled inside the **pm-skills** plugin (installed in Step 10). Once you have done that, authenticate it once:
+
+1. Open a terminal in VS Code, type `claude` and press **Enter** to start a session
+2. Type `/mcp` in the Claude chat — you will see a list of all connected services
+3. Find **Atlassian** in the list — it will show "Needs authentication"
+4. Claude will give you a link — open it in your browser (**Ctrl + left-click**)
+5. Log in with your Atlassian work account
+6. Done — Jira is now connected
+
+> **Note:** Complete Step 10 (Install Skills) first, then come back here to authenticate. The Jira MCP is installed automatically with the pm-skills plugin.
+
+> **Why connect Jira?** So Claude can pull ticket details, check what's in your sprint, and update statuses without you having to copy-paste anything between windows.
+
+---
+
+## Step 9 — Start Claude Code in VS Code
 
 You're ready! But before you start, you need to open a **project folder**.
 
@@ -161,7 +180,7 @@ That's it. A screen will appear at the bottom and you can start talking to it li
 
 ---
 
-## Step 9 — Install Skills
+## Step 10 — Install Skills
 
 Skills are like superpowers you activate by typing `/skill-name` in the Claude chat. Before you can use them, you need to install them once. Here's the full list of installs — you only ever need to do this once.
 
@@ -211,7 +230,7 @@ Then install by domain — pick the ones relevant to your role:
 
 ---
 
-## Step 10 — Built-in Claude Commands
+## Step 11 — Built-in Claude Commands
 
 These are commands built into Claude Code — no installation needed. Type them directly in the Claude chat at any time.
 
@@ -286,7 +305,7 @@ These are community-discovered shorthand words you add anywhere in your message.
 
 ---
 
-## Step 11 — Skills Reference — What You Can Ask Claude to Do
+## Step 12 — Skills Reference — What You Can Ask Claude to Do
 
 Here's everything available, grouped by who needs them and why.
 
@@ -531,10 +550,11 @@ The marketing-skills pack adds many more skills on top of the originals.
 - [ ] **Step 5** — Google account authenticated (`gcloud auth application-default login` done)
 - [ ] **Step 6** — Obsidian installed and vault created
 - [ ] **Step 7** — BigQuery MCP added to Claude Code
-- [ ] **Step 8** — Project folder opened in VS Code and Claude session started
-- [ ] **Step 9** — Skill marketplaces added and skill packs installed
-- [ ] **Step 10** — Familiar with built-in slash commands and thinking keywords
-- [ ] **Step 11** — Skills reference reviewed — know what to type for your role
+- [ ] **Step 8** — Jira (Atlassian) MCP authenticated
+- [ ] **Step 9** — Project folder opened in VS Code and Claude session started
+- [ ] **Step 10** — Skill marketplaces added and skill packs installed
+- [ ] **Step 11** — Familiar with built-in slash commands and thinking keywords
+- [ ] **Step 12** — Skills reference reviewed — know what to type for your role
 
 ---
 
