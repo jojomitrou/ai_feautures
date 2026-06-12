@@ -1,108 +1,162 @@
 ---
 name: prep
-description: Use at the start of every VS Code session to run the daily workflow kickoff — verifies critical connections, gathers context, and organises the day into Must Do, Should Do, and Check Later.
+description: Use at the start of every VS Code session to run the daily workflow kickoff — verifies critical connections, ensures all work is saved to GitHub, gathers context, and organises the day into Must Do, Should Do, and Check Later.
 ---
 
 # Daily Session Prep
 
-Run this at the start of every session. It does three things in order: checks connections, gathers context, then structures the day.
+Run this at the start of every session. The user may not be familiar with GitHub or Obsidian yet — be a friendly guide, not a technical gatekeeper. Explain things simply when needed.
+
+The golden rule of every session: **everything the user works on must end up saved in a GitHub repository**. Notes, plans, code, decisions — all of it. GitHub is the safety net. Nothing should live only on the laptop.
 
 ---
 
-## Phase 1 — Connections
+## Phase 1 — Foundation Check
 
-### Blocking (must be ✅ before continuing)
+### 1a — GitHub (blocking)
 
-**GitHub**
+Run:
 ```
 gh auth status
 ```
-- **Pass:** "Logged in to github.com as [username]"
-- **Fail:** run `gh auth login` — do not proceed until resolved
 
-**Obsidian Vault**
-Check for the vault folder in this order:
+**If pass:** great, move on.
+
+**If fail:** explain simply —
+> *"GitHub is like a safe online folder where all your work gets backed up. We need to log in before starting. Type `gh auth login` in the terminal and follow the steps — I'll wait."*
+
+Do not proceed until GitHub is connected.
+
+---
+
+### 1b — GitHub Repo for Today's Work (blocking)
+
+Check whether the current VS Code folder is a git repository:
+```
+git status
+```
+
+**If pass (inside a repo):**
+- Check for any uncommitted changes from the last session: `git status`
+- If there are unsaved changes, ask: *"You have work from last time that wasn't saved to GitHub — want me to commit it now before we start?"*
+- If yes, run `git add -A` and `git commit -m "Session save — [date]"` and `git push`
+
+**If fail (not a repo):**
+Explain simply —
+> *"Your work needs a home on GitHub. Think of it like a folder that automatically backs everything up online. Let's set one up — what would you like to call this project?"*
+
+Then:
+1. Run `git init`
+2. Create a repo on GitHub: `gh repo create [name] --private --source=. --push`
+3. Confirm it's live: `gh repo view --web`
+
+Do not proceed until there is a GitHub repo for the current work.
+
+---
+
+### 1c — Obsidian Vault (blocking)
+
+Check for vault folder in this order:
 1. `C:\Users\jomit\OneDrive\Documents\vault`
 2. `C:\Users\jomit\Documents\vault`
 3. `C:\Users\jomit\vault`
 
-- **Pass:** folder exists with at least one `.md` file
-- **Fail:** ask the user to confirm vault path — do not proceed until resolved
+**If pass:** scan for notes modified in the last 3 days. Note what was found — use it in Phase 2.
 
-### Non-blocking (check but do not block)
+**If fail:** explain simply —
+> *"Obsidian is your notebook — it stores everything you want to remember between sessions. It looks like it's not set up yet. Open Obsidian, create a vault, and let me know the folder path — I'll save it here for next time."*
 
-| Service | How to check | If failing |
-|---------|-------------|------------|
-| BigQuery | `gcloud auth list` | ⚠️ flag only if data work needed today |
-| Gmail | Call `list_labels` via MCP | ⚠️ non-blocking |
-| Google Calendar | Call `list_calendars` via MCP | ⚠️ non-blocking |
-| Jira | Atlassian MCP call | ⚠️ flag only if ticket work needed today |
+Update this skill with the confirmed vault path once known. Do not block if Obsidian is genuinely not installed yet — flag it as ⚠️ and continue.
+
+---
+
+### 1d — Everything Else (non-blocking)
+
+Check these quietly and note status — do not block on any of them:
+
+| Service | Check | If failing |
+|---------|-------|------------|
+| BigQuery | `gcloud auth list` | ⚠️ flag if data work needed today |
+| Gmail | `list_labels` via MCP | ⚠️ non-blocking |
+| Google Calendar | `list_calendars` via MCP | ⚠️ non-blocking |
+| Jira | Atlassian MCP call | ⚠️ flag if ticket work needed today |
 | Slack | Slack MCP `list_channels` | ⚠️ non-blocking |
 
 ---
 
-## Phase 2 — Context Gathering
+## Phase 2 — Context Gathering (silent)
 
-Once GitHub and Obsidian are confirmed, gather context before asking the user anything.
+Gather this before asking the user anything. Do not narrate each step — just collect it.
 
-1. **Read Obsidian** — scan the vault for any notes from the last session, open todos, or flagged items. Look for files modified in the last 3 days.
-2. **Check GitHub** — run `gh pr list` and `gh issue list` to see open PRs and issues assigned to the user
-3. **Check Calendar** (if connected) — call `list_events` for today to see meetings scheduled
-4. **Check Jira** (if connected) — look for in-progress or blocked tickets in the current sprint
-5. **Check Slack** (if connected) — look for unread mentions or flagged messages
-
-Do this silently — do not report each step. Just gather the information.
+1. **Obsidian** — recent notes, open todos, anything flagged from last session
+2. **GitHub** — open PRs (`gh pr list`), open issues (`gh issue list`)
+3. **Calendar** (if connected) — today's meetings via `list_events`
+4. **Jira** (if connected) — in-progress or blocked sprint tickets
+5. **Slack** (if connected) — unread mentions or flagged threads
 
 ---
 
-## Phase 3 — Daily Structure
+## Phase 3 — Plan the Day
 
-Ask the user one question:
+Ask one question:
 
 > **"What's the main thing you want to get done today?"**
 
-Then, using what they say combined with everything gathered in Phase 2, organise the day into three buckets:
+Then combine their answer with everything from Phase 2 and organise into three buckets:
 
 ### ✅ Must Do
-Tasks that absolutely need to happen today. These are either:
-- What the user just said is the main goal
-- Blocking items found in GitHub (PRs awaiting review, failing CI)
-- Today's meetings from Calendar
+Non-negotiable for today:
+- The user's stated main goal
+- Blocking GitHub items (failing CI, PRs waiting on them)
+- Today's meetings
 - Blocked Jira tickets
 
 ### 📋 Should Do
-Important but not urgent. These are:
+Important but can slip to tomorrow if needed:
 - Open GitHub issues or non-blocking PRs
-- Follow-ups from Obsidian notes
-- Non-urgent Jira tasks in the sprint
-- Items the user mentioned but aren't today's main focus
+- Obsidian follow-ups from recent notes
+- Non-urgent sprint tasks
+- Secondary goals the user mentioned
 
 ### 🔁 Check Later
-Things to keep an eye on but not act on now:
-- Slack threads or mentions that don't need immediate response
-- GitHub notifications that aren't assigned to the user
-- Ideas or notes from Obsidian flagged for "someday"
-- Anything the user wants to park for later in the day
+Park these — don't act now:
+- Slack threads not needing immediate reply
+- GitHub notifications not assigned to the user
+- Obsidian "someday" ideas
+- Anything the user wants to revisit later in the day
 
 ---
 
-## Report
+## Phase 4 — End-of-Session Reminder
 
-Print the full daily briefing once everything is done:
+At the end of every session (or when the user says they're done), always run:
+
+```
+git status
+git add -A
+git commit -m "Work saved — [brief description] — [date]"
+git push
+```
+
+Explain if needed:
+> *"Before we close — let's make sure everything is saved to GitHub. Think of this as pressing Save on your whole day's work."*
+
+---
+
+## Daily Briefing Report
 
 ```
 ════════════════════════════════════════
   DAILY PREP — Quantum Media
   [Day, Date]
 ════════════════════════════════════════
-
   CONNECTIONS
-  GitHub      ✅  @[username]
-  Obsidian    ✅  [N] notes in vault
+  GitHub      ✅  @[username] — repo: [repo name]
+  Obsidian    ✅  [N] notes — [N] updated recently
   BigQuery    ✅ / ⚠️
   Gmail       ✅ / ⚠️
   Calendar    ✅ / ⚠️
-  Jira        ✅ / ⚠️
+  Jira        ⚠️  (flag if needed today)
   Slack       ✅ / ⚠️
 
 ────────────────────────────────────────
@@ -120,4 +174,4 @@ Print the full daily briefing once everything is done:
 ════════════════════════════════════════
 ```
 
-After printing, ask: **"Anything to add or move between buckets?"** — adjust based on their answer, then begin work on the first Must Do item.
+Ask: **"Anything to add or move between buckets?"** — adjust, then begin the first Must Do item.
