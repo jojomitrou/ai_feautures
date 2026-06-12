@@ -263,6 +263,29 @@ Add these words anywhere in your message to boost how hard Claude thinks. No sla
 
 ---
 
+### Power User Prompt Prefixes
+
+These are community-discovered shorthand words you add anywhere in your message. They're not built into Claude Code — they work because Claude has seen these patterns so many times in its training that it recognises the intent. Add them at the start of any prompt.
+
+| Prefix | What it does | Example |
+|--------|-------------|---------|
+| `/ghost` | Rewrites text to sound fully human — strips em-dashes, "I hope this helps", and every other AI tell | `/ghost rewrite this email` |
+| `L99` | Forces Claude to commit to one answer — no more "it depends" or sitting on the fence | `L99 which database should we use` |
+| `OODA` | Structures the response using the military decision framework: Observe → Orient → Decide → Act | `OODA how do we fix our onboarding drop-off` |
+| `SCAFFOLD` | Lays out full structure before writing any code — useful for starting new features | `SCAFFOLD build a new reporting module` |
+| `PERSONA` | Claude responds as a specific expert with real opinions and biases | `PERSONA senior growth marketer — review this landing page` |
+| `/skeptic` | Claude challenges whether your question is even the right one before answering | `/skeptic should we add a referral program` |
+| `BEASTMODE` | Drops the hedging and diplomacy — direct, blunt, high-effort output | `BEASTMODE review this strategy doc` |
+| `/noyap` | Skips the preamble and filler — answer only, no wind-up | `/noyap what's the best way to structure this SQL` |
+| `XRAY` | Deep examination — pulls apart what's really going on beneath the surface | `XRAY why is our churn rate increasing` |
+| `/punch` | Tightens and shortens whatever you give it — removes fluff | `/punch shorten this paragraph` |
+
+> **Note:** These work across Claude Code AND claude.ai chat. They are community conventions — not official Anthropic features. The thinking keywords above (`ultrathink`, `think harder`) are the exception: those are officially built into Claude Code.
+
+> **Does not work:** `/nofilter`, `/unlocked`, `/jailbreak`, `/godmode` — these are myths. They have no effect.
+
+---
+
 ## Step 11 — Skills Reference — What You Can Ask Claude to Do
 
 Here's everything available, grouped by who needs them and why.
