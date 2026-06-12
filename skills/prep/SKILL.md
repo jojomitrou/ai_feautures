@@ -67,9 +67,14 @@ Call the Google Calendar MCP tool to list calendars:
 ## Step 6 — Jira (Atlassian)
 
 Call the Atlassian MCP to check connectivity. Try fetching the user's profile or project list.
-- MCP server: `plugin:pm-skills:atlassian`
-- **Pass:** returns valid data
-- **Fail:** MCP shows "Needs authentication" — tell the user to go to **Claude Code settings → MCP servers → Atlassian → Authenticate**, complete the browser login, then re-run prep
+- MCP server: `plugin:pm-skills:atlassian` at `https://mcp.atlassian.com/v1/sse`
+- **Pass:** returns valid data (profile, projects, or issues)
+- **Fail:** MCP shows "Needs authentication" — walk the user through these steps:
+  1. Type `/mcp` in the Claude chat to see all connected services
+  2. Find **Atlassian** — it will show "Needs authentication"
+  3. Claude will provide a link — open it with **Ctrl + left-click**
+  4. Log in with your Atlassian work account in the browser
+  5. Return to VS Code and re-run `/prep` to confirm it's connected
 
 ---
 
