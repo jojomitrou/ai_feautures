@@ -72,7 +72,7 @@ This lets Claude Code talk to GitHub — where all your code files live online.
    - Choose **GitHub.com**
    - Choose **HTTPS**
    - Choose **Login with a web browser**
-   - A code will appear — copy it, then press Enter
+   - A code will appear — this **8-digit code is shown directly in your VS Code terminal**, and it is the **first line** that appears after you run `gh auth login`. Copy it, then press Enter.
 
    ![Screenshot showing the code](C:\Users\jomit\jomqu\OneDrive\Desktop\Screenshot 2026-06-08 115606.png)
 
@@ -161,7 +161,7 @@ That's it. A screen will appear at the bottom and you can start talking to it li
 
 ---
 
-## Available Skills — What You Can Ask Claude to Do
+## Step 9 — Install Skills
 
 Skills are like superpowers you activate by typing `/skill-name` in the Claude chat. Before you can use them, you need to install them once. Here's the full list of installs — you only ever need to do this once.
 
@@ -208,6 +208,62 @@ Then install by domain — pick the ones relevant to your role:
 | Auto-memory curation | `/plugin install self-improving-agent@claude-code-skills` |
 
 ---
+
+---
+
+## Step 10 — Built-in Claude Commands
+
+These are commands built into Claude Code — no installation needed. Type them directly in the Claude chat at any time.
+
+### Slash Commands
+
+| Command | What it does |
+|---------|-------------|
+| `/clear` | Wipe the conversation and start fresh |
+| `/compact` | Compress the conversation to free up memory |
+| `/config` / `/settings` | Change preferences — theme, editor mode, notifications |
+| `/copy` | Copy Claude's last response or pick a specific code block |
+| `/cost` | Show how many tokens and how much this session has used |
+| `/doctor` | Check if Claude Code is healthy and up to date |
+| `/effort` | Set thinking effort for the session: `low` / `medium` / `high` / `xhigh` / `max` |
+| `/fast` | Toggle fast mode — Opus model with faster output |
+| `/feedback` | Send feedback directly to Anthropic |
+| `/ide` | Connect Claude to your VS Code window |
+| `/init` | Set up Claude Code in a new project folder |
+| `/loop` | Run a repeating task automatically |
+| `/mcp` | Manage MCP server connections |
+| `/memory` | View or manage Claude's memory files |
+| `/model` | Switch AI model mid-session |
+| `/plugin` | Manage installed plugins |
+| `/recap` | Show a summary of what was done this session |
+| `/release-notes` | See what's new in the latest Claude Code update |
+| `/resume` | Pick up a previous conversation |
+| `/review` | Review uncommitted code changes |
+| `/schedule` | Schedule a reminder or wakeup for later |
+| `/security-review` | Run a security-focused code review |
+| `/status` | Check your auth, model, and connection |
+| `/terminal-setup` | Optimise terminal display settings |
+| `/thinking` | Toggle extended thinking on/off |
+| `/tokens` | Show token usage for this session |
+| `/ultrareview` | Deep multi-agent cloud code review — billed separately |
+
+---
+
+### Thinking Keywords
+
+Add these words anywhere in your message to boost how hard Claude thinks. No slash needed — just write them naturally.
+
+| Keyword | What it does |
+|---------|-------------|
+| `think` | Enable basic extended thinking |
+| `think harder` | More thinking budget — for complex tasks |
+| `ultrathink` | Maximum thinking — for your hardest problems |
+
+> **Example:** *"ultrathink — refactor this function to handle all edge cases"*
+
+---
+
+## Step 11 — Skills Reference — What You Can Ask Claude to Do
 
 Here's everything available, grouped by who needs them and why.
 
@@ -443,14 +499,19 @@ The marketing-skills pack adds many more skills on top of the originals.
 
 ## Checklist — Tick These Off As You Go
 
-- [ ] VS Code installed and open
-- [ ] Claude Code extension installed inside VS Code
-- [ ] Node.js installed (`node --version` shows a number)
-- [ ] Claude Code installed (`claude --version` shows a number)
-- [ ] GitHub CLI installed and logged in (`gh auth status` says "Logged in")
-- [ ] Google Cloud SDK installed (`gcloud --version` shows a number)
-- [ ] Google account authenticated (`gcloud auth application-default login` done)
-- [ ] BigQuery MCP added to Claude Code
+- [ ] **Step 1** — VS Code installed and open
+- [ ] **Step 1** — Claude Code extension installed inside VS Code
+- [ ] **Step 2** — Node.js installed (`node --version` shows a number)
+- [ ] **Step 3** — Claude Code installed (`claude --version` shows a number)
+- [ ] **Step 4** — GitHub CLI installed and logged in (`gh auth status` says "Logged in")
+- [ ] **Step 5** — Google Cloud SDK installed (`gcloud --version` shows a number)
+- [ ] **Step 5** — Google account authenticated (`gcloud auth application-default login` done)
+- [ ] **Step 6** — Obsidian installed and vault created
+- [ ] **Step 7** — BigQuery MCP added to Claude Code
+- [ ] **Step 8** — Project folder opened in VS Code and Claude session started
+- [ ] **Step 9** — Skill marketplaces added and skill packs installed
+- [ ] **Step 10** — Familiar with built-in slash commands and thinking keywords
+- [ ] **Step 11** — Skills reference reviewed — know what to type for your role
 
 ---
 
