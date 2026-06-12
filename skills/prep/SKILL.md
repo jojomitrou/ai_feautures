@@ -64,12 +64,12 @@ Call the Google Calendar MCP tool to list calendars:
 
 ---
 
-## Step 6 — Jira (Atlassian)
+## Step 6 — Jira (Atlassian) *(optional)*
 
 Call the Atlassian MCP to check connectivity. Try fetching the user's profile or project list.
 - MCP server: `plugin:pm-skills:atlassian` at `https://mcp.atlassian.com/v1/sse`
 - **Pass:** returns valid data (profile, projects, or issues)
-- **Fail:** MCP shows "Needs authentication" — walk the user through these steps:
+- **Fail:** show as ⚠️ in the report — this is non-blocking. Only flag it if the user's current task requires Jira access. If so, walk them through:
   1. Type `/mcp` in the Claude chat to see all connected services
   2. Find **Atlassian** — it will show "Needs authentication"
   3. Claude will provide a link — open it with **Ctrl + left-click**
@@ -111,7 +111,7 @@ Run all seven checks, then print one status block:
   Obsidian        ✅  vault found — [N] notes
   Gmail           ✅  connected
   Google Calendar ✅  connected — [N] calendars
-  Jira            ✅  connected
+  Jira            ⚠️  not connected (will flag if needed)
   Slack           ✅  connected — [N] channels
 ────────────────────────────────────────
   All systems go. Ready to work!
@@ -130,8 +130,7 @@ If anything fails, show the fix inline:
   Obsidian        ✅  OK
   Gmail           ✅  OK
   Google Calendar ✅  OK
-  Jira            ❌  needs authentication
-                  → type /mcp → find Atlassian → Ctrl+click link → log in
+  Jira            ⚠️  not connected (non-blocking — will flag if needed)
   Slack           ❌  not configured
                   → see Step 7 above for full setup instructions
 ────────────────────────────────────────
@@ -139,4 +138,4 @@ If anything fails, show the fix inline:
 ────────────────────────────────────────
 ```
 
-Do not proceed with any other task until all six show ✅.
+Do not proceed with any other task until GitHub, BigQuery, Obsidian, Gmail, Google Calendar, and Slack all show ✅. Jira (⚠️) is non-blocking — only raise it if the current task requires Jira access.
