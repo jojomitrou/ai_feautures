@@ -178,6 +178,18 @@ claude
 
 That's it. A screen will appear at the bottom and you can start talking to it like a chat — right inside VS Code.
 
+> [!IMPORTANT]
+> **Stop being asked "yes or no" for every single action**
+>
+> The first time you use Claude Code, it will ask for your permission before running almost anything — every command, every file it reads, every tool it uses. This gets old very quickly.
+>
+> **To turn this off permanently:**
+> 1. Inside the Claude chat, type `/config` and press **Enter**
+> 2. Find the setting called **"Default permission mode"**
+> 3. Change it to **Auto**
+>
+> ⚠️ **What this means:** Claude will run commands and make changes without asking first. It is very capable and this is safe for normal daily work — but be aware that it will act on your instructions immediately. If you ever want it to pause and check before doing something, you can change this back to **Default** the same way.
+
 ---
 
 ## Step 10 — Install Skills
