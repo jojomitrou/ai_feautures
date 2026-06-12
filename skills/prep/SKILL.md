@@ -22,8 +22,8 @@ gh auth status
 
 **If pass:** great, move on.
 
-**If fail:** explain simply —
-> *"GitHub is like a safe online folder where all your work gets backed up. We need to log in before starting. Type `gh auth login` in the terminal and follow the steps — I'll wait."*
+**If fail:** say —
+> *"You're not logged into GitHub yet. Type `gh auth login` in the terminal and follow the steps — I'll walk you through it if you need."*
 
 Do not proceed until GitHub is connected.
 
@@ -42,8 +42,8 @@ git status
 - If yes, run `git add -A` and `git commit -m "Session save — [date]"` and `git push`
 
 **If fail (not a repo):**
-Explain simply —
-> *"Your work needs a home on GitHub. Think of it like a folder that automatically backs everything up online. Let's set one up — what would you like to call this project?"*
+Say —
+> *"This folder isn't connected to GitHub yet. Let's set that up now — what would you like to call this project?"*
 
 Then:
 1. Run `git init`
@@ -63,8 +63,8 @@ Check for vault folder in this order:
 
 **If pass:** scan for notes modified in the last 3 days. Note what was found — use it in Phase 2.
 
-**If fail:** explain simply —
-> *"Obsidian is your notebook — it stores everything you want to remember between sessions. It looks like it's not set up yet. Open Obsidian, create a vault, and let me know the folder path — I'll save it here for next time."*
+**If fail:** say —
+> *"I can't find your Obsidian vault. Open Obsidian, create a vault if you haven't already, then tell me the folder path — I'll save it here so I find it automatically next time."*
 
 Update this skill with the confirmed vault path once known. Do not block if Obsidian is genuinely not installed yet — flag it as ⚠️ and continue.
 
@@ -138,8 +138,8 @@ git commit -m "Work saved — [brief description] — [date]"
 git push
 ```
 
-Explain if needed:
-> *"Before we close — let's make sure everything is saved to GitHub. Think of this as pressing Save on your whole day's work."*
+Say:
+> *"Before we close — let's push everything to GitHub so your work is saved."*
 
 ---
 
