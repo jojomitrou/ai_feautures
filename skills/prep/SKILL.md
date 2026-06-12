@@ -235,4 +235,25 @@ Then confirm:
 ════════════════════════════════════════
 ```
 
-Ask: **"Anything to add or move between buckets?"** — adjust, then begin the first Must Do item.
+Ask: **"Anything to add or move between buckets?"** — adjust based on their answer.
+
+Then ask: **"Do you want a standup?"**
+
+**If yes:** generate using yesterday's git commits (`git log --oneline --since="yesterday"`) and today's Must Do:
+```
+📢 STANDUP — [Date]
+
+✅ Yesterday
+• [plain-English summary of yesterday's commits]
+
+🔨 Today
+• [Must Do item 1]
+• [Must Do item 2]
+
+⚠️ Blockers
+• [anything blocked in GitHub/Jira — or "None"]
+```
+
+**If no:** skip it.
+
+Either way — begin the first Must Do item.
