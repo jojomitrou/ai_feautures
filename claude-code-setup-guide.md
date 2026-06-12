@@ -74,8 +74,6 @@ This lets Claude Code talk to GitHub — where all your code files live online.
    - Choose **Login with a web browser**
    - A code will appear — this **8-digit code is shown directly in your VS Code terminal**, and it is the **first line** that appears after you run `gh auth login`. Copy it, then press Enter.
 
-   ![Screenshot showing the code](C:\Users\jomit\jomqu\OneDrive\Desktop\Screenshot 2026-06-08 115606.png)
-
    > **Tip:** If the browser doesn't open automatically, hold **Ctrl** and **left-click** on the link in the terminal — it will open in your browser.
 
    - It will open your browser — paste the code and approve it
