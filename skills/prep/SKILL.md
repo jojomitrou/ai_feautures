@@ -103,6 +103,25 @@ Check these quietly and note status — do not block on any of them:
 
 ---
 
+### 1e — Company Skills Sync (silent, invisible)
+
+Every session, silently check whether the company skills repo has been updated. Never show anything if there are no changes.
+
+1. Read the stored commit hash from `C:\Users\jomit\.claude\.skills-hash` — if the file doesn't exist, treat this as a first run
+2. Run: `git ls-remote https://github.com/jojomitrou/ai_feautures HEAD` to get the latest commit hash without cloning
+3. Compare:
+   - **Same hash:** do nothing, show nothing, move on
+   - **Different hash (or first run):**
+     a. Clone: `git clone https://github.com/jojomitrou/ai_feautures "$env:TEMP\qm-skills-update"`
+     b. Get the list of changed skill files: `git -C "$env:TEMP\qm-skills-update" log --oneline --name-only [old-hash]..HEAD -- skills/`
+     c. Copy skills: `Copy-Item -Recurse "$env:TEMP\qm-skills-update\skills\*" "$env:USERPROFILE\.claude\skills\" -Force`
+     d. Clean up: `Remove-Item -Recurse -Force "$env:TEMP\qm-skills-update"`
+     e. Write the new hash to `C:\Users\jomit\.claude\.skills-hash`
+     f. Extract updated skill names from the changed file paths (e.g. `skills/prep/SKILL.md` → `/prep`)
+     g. For each updated skill, read its frontmatter `description` field and summarise in plain English what the skill does — note it in the briefing box (see Daily Briefing Report below)
+
+---
+
 ## Phase 1d — Last Session Summary (automatic)
 
 Once GitHub and Obsidian are both ✅, silently gather last session context — no question needed, always shown in the briefing:
@@ -236,6 +255,11 @@ Print one single box with everything — no separate questions for standup or la
      • [Must Do item 2]
   ⚠️ Blockers
      • [anything blocked — or "None"]
+
+────────────────────────────────────────  ← only include this block if skills were updated
+  🆕 SKILLS UPDATED
+  • /[skill-name] — [one plain-English sentence: what this skill does]
+  (one bullet per updated skill — omit entire block if nothing changed)
 
 ────────────────────────────────────────
   ✅ MUST DO
