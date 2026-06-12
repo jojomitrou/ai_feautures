@@ -147,7 +147,29 @@ That's it. A screen will appear at the bottom and you can start talking to it li
 
 ## Available Skills — What You Can Ask Claude to Do
 
-Skills are like superpowers you activate by typing `/skill-name` in the Claude chat. Here's everything available, grouped by who needs them and why.
+Skills are like superpowers you activate by typing `/skill-name` in the Claude chat. Before you can use them, you need to install them once. Here's how.
+
+### Step 1 — Add the Marketplace
+
+Open Claude in VS Code and type:
+```
+/plugin marketplace add anthropics/claude-plugins-official
+```
+
+### Step 2 — Install the Skills
+
+The skills we use come from the **Superpowers** plugin. Type:
+```
+/plugin install superpowers@claude-plugins-official
+```
+
+> The source code lives at: **https://github.com/obra/superpowers**
+
+That's it — you only need to do this once. After installing, all the skills below are available immediately.
+
+---
+
+Here's everything available, grouped by who needs them and why.
 
 ---
 
