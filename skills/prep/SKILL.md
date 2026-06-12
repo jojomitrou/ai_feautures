@@ -103,15 +103,12 @@ Check these quietly and note status — do not block on any of them:
 
 ---
 
-## Phase 1d — Last Session Summary (optional)
+## Phase 1d — Last Session Summary (automatic)
 
-Once GitHub and Obsidian are both ✅, ask:
-
-> **"Would you like a quick note on what was done last time?"**
-
-**If yes:** pull the last 5 git commits (`git log --oneline -5`) and the most recently modified Obsidian note, then give a 3–5 line plain-English summary of what was worked on. Keep it brief — just enough to jog the memory.
-
-**If no:** skip straight to Phase 2.
+Once GitHub and Obsidian are both ✅, silently gather last session context — no question needed, always shown in the briefing:
+- Pull `git log --oneline -5` for the last 5 commits
+- Read the most recently modified Obsidian note in `_sessions/`
+- Summarise in 2–3 plain-English lines — what was worked on, nothing technical
 
 ---
 
@@ -206,19 +203,39 @@ Then confirm:
 
 ## Daily Briefing Report
 
+Print one single box with everything — no separate questions for standup or last session. Gather it all silently first, then display it together.
+
 ```
 ════════════════════════════════════════
   DAILY PREP — Quantum Media
   [Day, Date]
 ════════════════════════════════════════
-  CONNECTIONS
-  GitHub      ✅  @[username] — repo: [repo name]
-  Obsidian    ✅  [N] notes — [N] updated recently
+  GitHub      ✅  @[username]
+  Obsidian    ✅  [N] notes
   BigQuery    ✅ / ⚠️
   Gmail       ✅ / ⚠️
   Calendar    ✅ / ⚠️
   Jira        ⚠️  (flag if needed today)
   Slack       ✅ / ⚠️
+
+  📅 MEETINGS TODAY
+  [HH:MM]  [meeting title — attendees if known]
+  [HH:MM]  [meeting title]
+
+────────────────────────────────────────
+  🕐 LAST SESSION — [date of last session]
+  [2–3 plain-English lines: what was worked on,
+  any decisions made, what was left to do]
+
+────────────────────────────────────────
+  📢 STANDUP
+  ✅ Yesterday
+     • [plain-English summary of yesterday's commits]
+  🔨 Today
+     • [Must Do item 1]
+     • [Must Do item 2]
+  ⚠️ Blockers
+     • [anything blocked — or "None"]
 
 ────────────────────────────────────────
   ✅ MUST DO
@@ -235,25 +252,4 @@ Then confirm:
 ════════════════════════════════════════
 ```
 
-Ask: **"Anything to add or move between buckets?"** — adjust based on their answer.
-
-Then ask: **"Do you want a standup?"**
-
-**If yes:** generate using yesterday's git commits (`git log --oneline --since="yesterday"`) and today's Must Do:
-```
-📢 STANDUP — [Date]
-
-✅ Yesterday
-• [plain-English summary of yesterday's commits]
-
-🔨 Today
-• [Must Do item 1]
-• [Must Do item 2]
-
-⚠️ Blockers
-• [anything blocked in GitHub/Jira — or "None"]
-```
-
-**If no:** skip it.
-
-Either way — begin the first Must Do item.
+After printing, ask only: **"Anything to add or move between buckets?"** — adjust, then begin the first Must Do item.
