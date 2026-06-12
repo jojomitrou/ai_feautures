@@ -156,7 +156,7 @@ The Jira connection is bundled inside the **pm-skills** plugin (installed in Ste
 5. Log in with your Atlassian work account
 6. Done — Jira is now connected
 
-> **Note:** Complete Step 10 (Install Skills) first, then come back here to authenticate. The Jira MCP is installed automatically with the pm-skills plugin.
+> **Note:** Complete Step 11 (Install Skills) first, then come back here to authenticate. The Jira MCP is installed automatically with the pm-skills plugin.
 
 > **Why connect Jira?** So Claude can pull ticket details, check what's in your sprint, and update statuses without you having to copy-paste anything between windows.
 
@@ -192,7 +192,26 @@ That's it. A screen will appear at the bottom and you can start talking to it li
 
 ---
 
-## Step 10 — Install Skills
+## Step 10 — Install Company Skills
+
+Your team has a shared set of skills already built and ready to use — `/prep`, `/wrap`, `/week`, `/month`, and `/quarter`. One command pulls them all down.
+
+Open a terminal in VS Code and run:
+
+```powershell
+git clone https://github.com/jojomitrou/ai_feautures "$env:TEMP\qm-skills"; Copy-Item -Recurse "$env:TEMP\qm-skills\skills\*" "$env:USERPROFILE\.claude\skills\"; Remove-Item -Recurse -Force "$env:TEMP\qm-skills"
+```
+
+That's it — the skills are now installed. Restart Claude Code and they're ready.
+
+**To update your skills later** (when new ones are added by the team):
+Run the exact same command — it overwrites with the latest version automatically. Or just start a new session with `/prep` — it checks for updates in the background every time.
+
+> **What did this install?** See Step 13 (Skills Reference) for the full list of what each skill does.
+
+---
+
+## Step 11 — Install Skills
 
 Skills are like superpowers you activate by typing `/skill-name` in the Claude chat. Before you can use them, you need to install them once. Here's the full list of installs — you only ever need to do this once.
 
@@ -242,7 +261,7 @@ Then install by domain — pick the ones relevant to your role:
 
 ---
 
-## Step 11 — Built-in Claude Commands
+## Step 12 — Built-in Claude Commands
 
 These are commands built into Claude Code — no installation needed. Type them directly in the Claude chat at any time.
 
@@ -317,7 +336,7 @@ These are community-discovered shorthand words you add anywhere in your message.
 
 ---
 
-## Step 12 — Skills Reference — What You Can Ask Claude to Do
+## Step 13 — Skills Reference — What You Can Ask Claude to Do
 
 Here's everything available, grouped by who needs them and why.
 
@@ -564,9 +583,10 @@ The marketing-skills pack adds many more skills on top of the originals.
 - [ ] **Step 7** — BigQuery MCP added to Claude Code
 - [ ] **Step 8** — Jira (Atlassian) MCP authenticated
 - [ ] **Step 9** — Project folder opened in VS Code and Claude session started
-- [ ] **Step 10** — Skill marketplaces added and skill packs installed
-- [ ] **Step 11** — Familiar with built-in slash commands and thinking keywords
-- [ ] **Step 12** — Skills reference reviewed — know what to type for your role
+- [ ] **Step 10** — Company skills installed (`/prep`, `/wrap`, `/week`, `/month`, `/quarter`)
+- [ ] **Step 11** — Skill marketplaces added and skill packs installed
+- [ ] **Step 12** — Familiar with built-in slash commands and thinking keywords
+- [ ] **Step 13** — Skills reference reviewed — know what to type for your role
 
 ---
 
