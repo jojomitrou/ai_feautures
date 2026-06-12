@@ -89,6 +89,18 @@ Check these quietly and note status — do not block on any of them:
 
 ---
 
+## Phase 1d — Last Session Summary (optional)
+
+Once GitHub and Obsidian are both ✅, ask:
+
+> **"Would you like a quick note on what was done last time?"**
+
+**If yes:** pull the last 5 git commits (`git log --oneline -5`) and the most recently modified Obsidian note, then give a 3–5 line plain-English summary of what was worked on. Keep it brief — just enough to jog the memory.
+
+**If no:** skip straight to Phase 2.
+
+---
+
 ## Phase 2 — Context Gathering (silent)
 
 Gather this before asking the user anything. Do not narrate each step — just collect it.
