@@ -95,6 +95,11 @@ Silently gather last session context from git — no question needed, always sho
 - `git log --oneline -5` for the last 5 commits
 - Summarise in 2–3 plain-English lines — what was worked on, nothing technical
 
+Also silently read the carry-over task list:
+- File: `$env:USERPROFILE\.claude\carry_over_tasks.md`
+- If the file exists and has tasks, include every item in the **Must Do** bucket (Phase 4)
+- If the file is empty or missing, skip — do not mention it
+
 ---
 
 ## Phase 3 — Context Gathering (silent)
