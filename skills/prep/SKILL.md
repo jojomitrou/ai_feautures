@@ -70,22 +70,58 @@ Run all of these quietly and note status — do not block on any of them:
 
 ---
 
-### 1d — Company Skills Sync (silent, invisible)
+### 1d — Personal Workflows Repo (silent)
 
-Every session, silently check whether the company skills repo (`https://github.com/jojomitrou/ai_feautures`) has been updated. Never show anything if there are no changes.
+Check whether the user has a personal workflows repo configured.
 
-1. Read the stored commit hash from `$env:USERPROFILE\.claude\.skills-hash` — if the file doesn't exist, treat this as a first run
-2. Run: `git ls-remote https://github.com/jojomitrou/ai_feautures HEAD` to get the latest remote hash (fast, no clone needed)
-3. Compare:
+**Config file:** `$env:USERPROFILE\.claude\.workflows-repo`
+Format: line 1 = local path, line 2 = GitHub URL
+
+---
+
+**If the config file does NOT exist — bootstrap (first run only):**
+
+Say:
+> *"This is your first time running /prep. Let's create your personal workflows repo so your skills live somewhere you control — not in ai_feautures."*
+
+1. Ask: **"What would you like to call your workflows repo?"** (suggest `daily_workflows`)
+2. Get GitHub username: `gh api user --jq .login`
+3. Create the repo: `gh repo create [username]/[name] --private`
+4. Ask: **"Where would you like to clone it?"** (suggest `C:\Users\[username]\Documents\git repos\[name]`)
+5. Clone it: `git clone https://github.com/[username]/[name] "[localPath]"`
+6. Copy current installed skills into it:
+   `Copy-Item -Recurse "$env:USERPROFILE\.claude\skills\*" "[localPath]\skills\" -Force`
+7. Commit and push:
+   ```
+   git -C "[localPath]" add -A
+   git -C "[localPath]" commit -m "init: bootstrap from ai_feautures"
+   git -C "[localPath]" push
+   ```
+8. Write config to `$env:USERPROFILE\.claude\.workflows-repo` (two lines):
+   ```
+   [localPath]
+   https://github.com/[username]/[name]
+   ```
+9. Write initial hash: `git -C "[localPath]" rev-parse HEAD` → save to `$env:USERPROFILE\.claude\.skills-hash`
+
+Confirm:
+> *"Done — your workflows repo is live at https://github.com/[username]/[name]. All future skill updates will come from there."*
+
+---
+
+**If the config file EXISTS — normal sync:**
+
+1. Read local path (line 1) from `$env:USERPROFILE\.claude\.workflows-repo`
+2. Pull latest: `git -C "[localPath]" pull`
+3. Read stored hash from `$env:USERPROFILE\.claude\.skills-hash` — if missing, treat as first sync
+4. Get current HEAD: `git -C "[localPath]" rev-parse HEAD`
+5. Compare:
    - **Same hash:** do nothing, show nothing, move on
-   - **Different hash (or first run):**
-     a. Clone to temp: `git clone https://github.com/jojomitrou/ai_feautures "$env:TEMP\qm-skills-update"`
-     b. Get changed skill files: `git -C "$env:TEMP\qm-skills-update" log --oneline --name-only [old-hash]..HEAD -- skills/`
-     c. Copy skills: `Copy-Item -Recurse "$env:TEMP\qm-skills-update\skills\*" "$env:USERPROFILE\.claude\skills\" -Force`
-     d. Clean up: `Remove-Item -Recurse -Force "$env:TEMP\qm-skills-update"`
-     e. Write new hash to `$env:USERPROFILE\.claude\.skills-hash`
-     f. Extract updated skill names from changed paths (e.g. `skills/prep/SKILL.md` → `/prep`)
-     g. For each updated skill, read its frontmatter `description` and summarise in one sentence — include in the briefing box
+   - **Different hash (or no hash file):**
+     a. Get changed files: `git -C "[localPath]" log --oneline --name-only [old-hash]..HEAD -- skills/`
+     b. Copy skills: `Copy-Item -Recurse "[localPath]\skills\*" "$env:USERPROFILE\.claude\skills\" -Force`
+     c. Write new hash to `$env:USERPROFILE\.claude\.skills-hash`
+     d. Extract updated skill names and include in briefing box
 
 ---
 
@@ -167,8 +203,7 @@ Gather everything silently first, then print one single box.
 
 ```
 ════════════════════════════════════════
-  DAILY PREP — Quantum Media
-  [Day, Date]
+  DAILY PREP — [Day, Date]
 ════════════════════════════════════════
   GitHub      ✅  @[username]
   BigQuery    ✅ / ⚠️

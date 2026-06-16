@@ -25,6 +25,26 @@ If there is nothing to commit, note it and move on.
 
 ---
 
+## Step 1b — Sync Skills to Your Workflows Repo
+
+After saving the main repo, sync any skill changes to your personal workflows repo.
+
+1. Read local path (line 1) from `$env:USERPROFILE\.claude\.workflows-repo` — if the file doesn't exist, skip (bootstrap hasn't run yet)
+2. Copy all installed skills into the repo:
+   `Copy-Item -Recurse "$env:USERPROFILE\.claude\skills\*" "[localPath]\skills\" -Force`
+3. Commit and push if anything changed:
+   ```
+   git -C "[localPath]" add -A
+   git -C "[localPath]" diff --cached --quiet || (
+     git -C "[localPath]" commit -m "skills: sync — [date]"
+     git -C "[localPath]" push
+   )
+   ```
+
+If there are no changes, skip silently — do not mention it.
+
+---
+
 ## Step 2 — Log Completed Tasks
 
 1. Read `carry_over_tasks.md` (if it exists — skip if empty/missing)
