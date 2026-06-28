@@ -61,12 +61,12 @@ claude --version
 This lets Claude Code talk to GitHub — where all your code files live online.
 
 1. Go to: **https://cli.github.com**
-2. Click **"Download for Windows"**
+2. Use the dropdown, select Windows Install and Click **"Download for Windows"**
 3. Run the installer — keep clicking Next
 4. After it installs, open a **new** terminal in VS Code, type `claude` and press **Enter**. This starts Claude — wait until you see it ready.
 5. Now type:
    ```
-   gh auth login
+   ! gh auth login
    ```
 5. It will ask you some questions:
    - Choose **GitHub.com**
