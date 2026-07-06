@@ -4,7 +4,7 @@
 |---|---|---|---|
 | A1 skills v2 | pending | | |
 | A2 setup guide v2 | pending | | |
-| A3 decisions | rename DONE -> company-workflows (2026-07-06); private? still pending | 2026-07-06 | |
+| A3 decisions | DONE — renamed to company-workflows + made PRIVATE | 2026-07-06 | user decisions; installs now require repo access (invite team members) |
 | B1 zone-aware update + allowlist sync | pending — spec: docs/FORK-PROBLEM-RESOLUTION.md | | |
 | B2 /skills-status | pending | | |
 | C1 company repo design | pending | | |
