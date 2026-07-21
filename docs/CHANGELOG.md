@@ -4,6 +4,22 @@ One entry per skill per release. No version bump ships without a line here — s
 
 ---
 
+## 2026-07-21 — wrap v2.6, Step 1 leaked raw git error outside a repo folder
+
+Step 1 ran `git status --short` in the current folder with no guard. From a non-repo folder (e.g. a home-level OneDrive folder) that fails with `fatal: not a git repository` — and that raw line surfaced straight to the user instead of being handled.
+
+Fixed: Step 1 now checks repo-ness first and, if the folder isn't a repo, notes it plainly ("not a repo here, skipping") instead of letting the raw error through. Does not offer `git init` — that's `/prep`'s job, not wrap's.
+
+---
+
+## 2026-07-21 — prep v2.9, Phase 3 GitHub check crashed outside a repo folder
+
+Phase 3 step 1 always ran `gh pr list` / `gh issue list` in the current folder, with no guard. Run `/prep` from a non-repo folder (e.g. a home-level OneDrive folder) and both commands errored with `fatal: not a git repository` — silently swallowed as noise rather than skipped cleanly.
+
+Fixed: step 1 now checks whether the current folder is a git repo (the same check Phase 1b already makes) before running either command. Not a repo → skip, rely on Phase 2's per-repo checks instead. Also fixed in the same pass: the personal project-state block's PR check was guessing the GitHub owner from the Windows username (`jomqu`) instead of the actual GitHub login (`jojomitrou`), causing a `Could not resolve to a Repository` error — now resolves owner from each repo's own git remote via a subshell `cd` instead of a guessed `--repo owner/name` string.
+
+---
+
 ## 2026-07-21 — wrap v2.5, Step 1b was pushing the personal workflows repo unasked
 
 Step 1b synced skills + task files to the user's personal `daily_workflows` repo, then committed and pushed automatically whenever anything had changed — no summary shown, no confirm asked. That's a direct violation of Never-do rule 2 ("never push without a confirm"), which was written with Step 1 (the project repo) in mind but never actually enforced on Step 1b (the personal repo) — the two silently diverged.

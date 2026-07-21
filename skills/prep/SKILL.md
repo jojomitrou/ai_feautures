@@ -1,7 +1,7 @@
 ---
 name: prep
 description: Use at the start of every VS Code session to run the daily workflow kickoff — verifies critical connections, ensures all work is saved to GitHub, gathers context, and organises the day into Must Do, Should Do, and Check Later.
-version: 2.8
+version: 2.9
 origin: company
 ---
 
@@ -236,7 +236,7 @@ Summarise each in 1–2 plain-English lines and show under a `🔧 PROJECT STATE
 
 Gather this before asking the user anything. Do not narrate each step.
 
-1. **GitHub** — open PRs (`gh pr list`), open issues (`gh issue list`)
+1. **GitHub** — only if the current folder is a git repo (per 1b): open PRs (`gh pr list`), open issues (`gh issue list`). If not a repo (e.g. a home-level folder), skip — `gh pr list`/`gh issue list` need a repo context and will error otherwise. Rely on Phase 2's per-repo checks instead.
 2. **Calendar** (if connected) — today's meetings
 3. **Jira** (if connected) — in-progress or blocked sprint tickets
 

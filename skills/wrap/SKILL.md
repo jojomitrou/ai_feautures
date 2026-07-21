@@ -1,7 +1,7 @@
 ---
 name: wrap
 description: Use at the end of every VS Code session to commit and push all work, log completed tasks, and save tomorrow's starting point.
-version: 2.5
+version: 2.6
 origin: company
 ---
 
@@ -19,7 +19,9 @@ Run this when the day's work is done. Automatic except the two questions in Step
 
 ## Step 1 — Save Everything to GitHub
 
-Run `git status --short` in the current project folder. If there are changes:
+First check whether the current folder is a git repo at all: `git status --short` fails with `fatal: not a git repository` if it isn't. Catch that case and note it plainly ("not a repo here, skipping") — never let the raw `fatal:` line surface to the user. Do not offer to `git init` here; that's `/prep`'s Step 1b territory, not wrap's.
+
+If it is a repo and there are changes:
 - Show a 3-line summary (file count + names, truncated if more).
 - Ask: **"Save these to GitHub now?"** (default yes).
 - If yes:
@@ -30,7 +32,7 @@ Run `git status --short` in the current project folder. If there are changes:
   ```
 - If no: note it and move on — don't push silently.
 
-If there is nothing to commit, note it and move on without asking.
+If it's a repo but there's nothing to commit, note it and move on without asking.
 
 <!-- personal:extra-saves:start -->
 <!-- personal:extra-saves:end -->
