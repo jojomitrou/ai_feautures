@@ -1,7 +1,7 @@
 ---
 name: quarter
 description: Use at the start of a quarter to plan it, or at the end to retro it. Auto-detects which mode based on the date.
-version: 2.2
+version: 2.3
 origin: company
 ---
 
@@ -19,9 +19,13 @@ origin: company
 
 ## PLAN Mode
 
-### Step 0 — Read the level above (company targets, if configured)
+### Step 0 — Read the level above (company targets)
 
-Quarter is the top of the personal cascade. If a company targets repo is configured (it isn't yet — this is a Phase C feature; skip this silently until then), read `targets/{year}-{Qx}.md` filtered to your scope and show them before asking. Otherwise proceed straight to Step 2 with no parent link — every quarter goal will be `standalone`. **The cascade never blocks on the company layer being missing.**
+Quarter is the top of the personal cascade. Check for company targets in `company-workflows` (see `docs/COMPANY-TARGETS-DESIGN.md`):
+
+1. Look for `targets/{year}-Q{x}.md` in `company-workflows` (e.g. `targets/2026-Q3.md`) — reuse the same shallow-clone pattern `/prep`'s update check uses (`git clone --depth 1`, read, delete), or `gh api repos/{upstream}/contents/targets/{year}-Q{x}.md` directly.
+2. **File doesn't exist (404) or the repo/network is unreachable** → skip silently, proceed straight to Step 2 with no parent link — every quarter goal will be `standalone`. **The cascade never blocks on the company layer being missing or the file not existing yet — this is the normal state until an admin actually publishes targets.**
+3. **File exists** → parse the `yaml` list of targets (`id`, `text`, `measure`, `scope`, `version`). Every target currently has `scope: all` (team scoping isn't built yet — see the design doc), so show all of them. Carry the list into Step 2.
 
 Also read last quarter's retro `yaml` block in `task_log.md` for carry-overs.
 
@@ -78,7 +82,7 @@ goals:
   - id: q-01
     text: [goal 1]
     measure: [one line]
-    advances: standalone     # or a company target id once Phase C exists
+    advances: standalone     # or a real target id from Step 0, e.g. T-2026Q3-02
 carryovers: [q-lastquarter-03]
 ```
 
@@ -169,8 +173,11 @@ scored:
   - id: q-01
     achieved: yes
     evidence: [one line]
-rollup: {}   # populated once a company target repo exists (Phase C) — each key is a target id
+rollup:
+  T-2026Q3-02: 1/1
 ```
+
+Compute `rollup` by grouping this quarter's scored goals by their `advances` value, keeping only entries whose `advances` is a real company-target id (`T-{period}-NN`) — `standalone` goals never appear here (there's no personal level above quarter to roll up to; they only ever roll up to a company target, if any). This is the same `rollup` map that `/wrap`'s opt-in Step 4b reads and pushes (filtered again there — see `docs/COMPANY-TARGETS-DESIGN.md`) if you've opted in.
 
 Ask: **"Any goals to carry into next quarter?"** — add them to `carry_over_tasks.md`.
 
@@ -194,6 +201,7 @@ Print:
   Tasks not completed: [N]
   Tasks added:         [N]
   Goals achieved:      [N/3]
+  Company targets:     T-2026Q3-02 1/1   ← only if any goal advanced a real target
   Carry-overs noted for Q[X+1].
 ══════════════════════════════════════
   Good quarter. On to Q[X+1].
