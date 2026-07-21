@@ -1,7 +1,7 @@
 ---
 name: month
 description: Use at the start of the month to plan it, or at the end of the month to retro it. Auto-detects which mode based on the date.
-version: 2.0
+version: 2.2
 origin: company
 ---
 
@@ -13,7 +13,7 @@ origin: company
 - Active tasks: `[personal_path]\tasks\carry_over_tasks.md`
 - Session log:  `[personal_path]\tasks\task_log.md`
 
-`[personal_path]` = line 1 of `$env:USERPROFILE\.claude\.workflows-repo`. RETRO window = the actual last 3 calendar days of the month, computed from the month's real length (`[DateTime]::DaysInMonth(year, month)`) — never a hardcoded 28–31 range.
+`[personal_path]` = the `personal_path` field of `$env:USERPROFILE\.claude\.workflows.json`. RETRO window = the actual last 3 calendar days of the month, computed from the month's real length (`[DateTime]::DaysInMonth(year, month)`) — never a hardcoded 28–31 range.
 
 ---
 

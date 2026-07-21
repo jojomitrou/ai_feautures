@@ -144,7 +144,7 @@ git clone https://github.com/jojomitrou/company-workflows "$env:TEMP\qm-skills";
 
 That's it — the skills are now installed. Restart Claude Code and they're ready.
 
-**To update later:** just run `/prep` — it checks for updates from your personal workflows repo every time and pulls anything new automatically. (This one-liner is for **first-time install only** — running it again would overwrite any personal customizations you've made to these files, so `/prep`'s built-in update check is the one and only way to update afterwards.)
+**To update later:** just run `/prep` — it checks `company-workflows` directly every time and applies any new release automatically, preserving your personal customizations (the parts of each skill marked as yours to edit). (This one-liner is for **first-time install only** — running it again would overwrite the whole file, personal edits included, so `/prep`'s built-in update check is the one and only way to update afterwards.)
 
 **What did this install?**
 

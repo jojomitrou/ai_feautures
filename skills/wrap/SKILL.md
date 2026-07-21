@@ -1,7 +1,7 @@
 ---
 name: wrap
 description: Use at the end of every VS Code session to commit and push all work, log completed tasks, and save tomorrow's starting point.
-version: 2.1
+version: 2.2
 origin: company
 ---
 
@@ -13,7 +13,7 @@ Run this when the day's work is done. Automatic except the two questions in Step
 - Active tasks: `[personal_path]\tasks\carry_over_tasks.md`
 - Session log:  `[personal_path]\tasks\task_log.md`
 
-`[personal_path]` = line 1 of `$env:USERPROFILE\.claude\.workflows-repo`.
+`[personal_path]` = the `personal_path` field of `$env:USERPROFILE\.claude\.workflows.json`.
 
 ---
 
@@ -39,7 +39,7 @@ If there is nothing to commit, note it and move on without asking.
 
 ## Step 1b — Sync Skills + Commit Tasks to Your Workflows Repo
 
-1. Read local path (line 1) from `$env:USERPROFILE\.claude\.workflows-repo` — if the file doesn't exist, skip (bootstrap hasn't run yet).
+1. Read `personal_path` from `$env:USERPROFILE\.claude\.workflows.json` — if the file doesn't exist, skip (bootstrap hasn't run yet).
 2. Sync skills to the personal repo — **allowlist only, never a whole-folder glob**:
    ```powershell
    $companySkills = 'prep','wrap','week','month','quarter','radar'

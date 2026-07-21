@@ -4,6 +4,20 @@ One entry per skill per release. No version bump ships without a line here — s
 
 ---
 
+## 2026-07-21 — prep v2.3, wrap v2.2, week/month/quarter v2.2 (Phase B1)
+
+Implements `docs/FORK-PROBLEM-RESOLUTION.md` — the actual zone-aware update engine, replacing the whole-file `Copy-Item -Force` that A1 left as a known limitation.
+
+- **`/prep`** — Phase 1d rewritten from the ground up:
+  - New `.workflows.json` config, replacing the three loose dotfiles (`.workflows-repo`, `.company`, `.skills-hash`), with automatic one-time migration for existing installs (backs them up as `.bak`, never deletes).
+  - **Anchored extract-reinject update algorithm**: on every run, checks `company-workflows` HEAD directly (shallow clone), and for each of the 6 core skills — extracts personal-zone content from the local file, verifies the company-zone hash against the last-recorded baseline (backs up + loudly flags any hand-edit instead of silently discarding or silently keeping it), takes the upstream file wholesale, and reinjects personal content by anchor name. A removed/renamed anchor recovers its content at the end of the file under "Recovered personal content" rather than losing it.
+  - One-time cleanup offer for existing installs: counts non-core skills tracked in the personal repo from before the A1 allowlist fix, offers to remove them (tagged first, so recoverable).
+  - Setup guide's Step 7 install one-liner is now install-only — `/prep` is the only update channel, documented in both places.
+- **`/wrap`, `/week`, `/month`, `/quarter`** — `[personal_path]` now resolved from `.workflows.json` instead of the old `.workflows-repo` dotfile.
+- **Test matrix** — all 8 cases from `docs/FORK-PROBLEM-RESOLUTION.md` §8 run and passing; evidence in `docs/test-evidence/2026-07-21-b1-test-matrix.md`. Caught and fixed one real bug in the process: Windows PowerShell 5.1's default `Get-Content`/`Set-Content` encoding mangles em-dashes/arrows — the algorithm now specifies explicit UTF-8 (no BOM) reads/writes throughout.
+
+---
+
 ## 2026-07-21 — setup guide v2 (Phase A2)
 
 Implements `docs/UPGRADE-PROPOSAL_2026-07-06.md` §1.2. `claude-code-setup-guide.md` restructured into **Core Setup (Steps 1-8, everyone)** → **Role Add-ons** (Data & Analytics, Engineering, Product & PM, Marketing, Knowledge Base) → **Optional Extras** → **Reference**. Changes:

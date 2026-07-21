@@ -1,7 +1,7 @@
 ---
 name: week
 description: Use at the start of the week to plan it, or at the end of the week to retro it. Auto-detects which mode based on the day.
-version: 2.0
+version: 2.2
 origin: company
 ---
 
@@ -13,7 +13,7 @@ origin: company
 - Active tasks: `[personal_path]\tasks\carry_over_tasks.md`
 - Session log:  `[personal_path]\tasks\task_log.md`
 
-`[personal_path]` = line 1 of `$env:USERPROFILE\.claude\.workflows-repo`. Week number = ISO 8601 (`Get-Date -UFormat %V`).
+`[personal_path]` = the `personal_path` field of `$env:USERPROFILE\.claude\.workflows.json`. Week number = ISO 8601 (`Get-Date -UFormat %V`).
 
 ---
 

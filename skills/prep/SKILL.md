@@ -1,7 +1,7 @@
 ---
 name: prep
 description: Use at the start of every VS Code session to run the daily workflow kickoff — verifies critical connections, ensures all work is saved to GitHub, gathers context, and organises the day into Must Do, Should Do, and Check Later.
-version: 2.1
+version: 2.3
 origin: company
 ---
 
@@ -15,7 +15,7 @@ The golden rule of every session: **everything the user works on must end up sav
 - Active tasks: `[personal_path]\tasks\carry_over_tasks.md`
 - Session log:  `[personal_path]\tasks\task_log.md`
 
-`[personal_path]` = line 1 of `$env:USERPROFILE\.claude\.workflows-repo`. If that file doesn't exist yet, Phase 1d below bootstraps it first.
+`[personal_path]` = the `personal_path` field of `$env:USERPROFILE\.claude\.workflows.json`. If that file doesn't exist yet, Phase 1d below bootstraps or migrates it first.
 
 ---
 
@@ -97,65 +97,97 @@ A service that was never set up for this role at install time should render `—
 
 ---
 
-### 1d — Personal Workflows Repo (silent)
+### 1d — Personal Workflows Repo & Skill Updates (silent)
 
-Check whether the user has a personal workflows repo configured.
+**Config file:** `$env:USERPROFILE\.claude\.workflows.json`
+```json
+{
+  "company": "Quantum Media",
+  "upstream": "jojomitrou/company-workflows",
+  "upstream_ref": "<last-applied commit sha>",
+  "personal_repo": "https://github.com/<user>/daily_workflows",
+  "personal_path": "<local clone path>",
+  "sync_skills": ["prep", "wrap", "week", "month", "quarter", "radar"],
+  "company_zone_hashes": { "prep": "<sha256>", "wrap": "<sha256>" },
+  "pin_updates": false
+}
+```
 
-**Config file:** `$env:USERPROFILE\.claude\.workflows-repo`
-Format: line 1 = local path, line 2 = GitHub URL
-
-**Company name file:** `$env:USERPROFILE\.claude\.company` — plain text, used in the briefing header. If missing, just omit the company line rather than asking every session.
+This one file replaces three older ones (`.workflows-repo`, `.company`, `.skills-hash`) — see Migration below if you're carrying those forward.
 
 ---
 
-**If the config file does NOT exist — bootstrap (first run only):**
+**If `.workflows.json` does NOT exist and none of the three old dotfiles exist either — bootstrap (first run ever):**
 
 Say:
 > *"This is your first time running /prep. Let's create your personal workflows repo so your skills — and your task history — live somewhere you control."*
 
-1. Ask: **"What's your company or team name?"** → write to `$env:USERPROFILE\.claude\.company`
+1. Ask: **"What's your company or team name?"**
 2. Get GitHub username: `gh api user --jq .login`
 3. Create the repo: `gh repo create [username]/daily_workflows --private`
-4. Clone it to `C:\Users\[username]\Documents\git repos\daily_workflows`:
-   `git clone https://github.com/[username]/daily_workflows "C:\Users\[username]\Documents\git repos\daily_workflows"`
-5. Copy only the 6 core skills into it (never the whole local skills folder — other locally-installed skills are personal/opt-in, not team-shared):
-   `Copy-Item -Recurse "$env:USERPROFILE\.claude\skills\{prep,wrap,week,month,quarter,radar}" "C:\Users\[username]\Documents\git repos\daily_workflows\skills\" -Force`
-6. Create the tasks folder with empty starter files:
-   `New-Item -ItemType Directory -Force "C:\Users\[username]\Documents\git repos\daily_workflows\tasks"`, then write a minimal `carry_over_tasks.md` (`# Carry-Over Tasks`) and `task_log.md` (`# Task Log`) if they don't already exist.
-7. Commit and push:
-   ```
-   git -C "C:\Users\[username]\Documents\git repos\daily_workflows" add -A
-   git -C "C:\Users\[username]\Documents\git repos\daily_workflows" commit -m "init: bootstrap workflows repo"
-   git -C "C:\Users\[username]\Documents\git repos\daily_workflows" push
-   ```
-8. Write config to `$env:USERPROFILE\.claude\.workflows-repo` (two lines):
-   ```
-   C:\Users\[username]\Documents\git repos\daily_workflows
-   https://github.com/[username]/daily_workflows
-   ```
-9. Write initial hash: `git -C "C:\Users\[username]\Documents\git repos\daily_workflows" rev-parse HEAD` → save to `$env:USERPROFILE\.claude\.skills-hash`
+4. Clone it to `C:\Users\[username]\Documents\git repos\daily_workflows` (this becomes `personal_path`)
+5. Copy the 6 core skills into it (never the whole local skills folder — other locally-installed skills are personal/opt-in, not team-shared):
+   `Copy-Item -Recurse "$env:USERPROFILE\.claude\skills\{prep,wrap,week,month,quarter,radar}" "[personal_path]\skills\" -Force`
+6. Create the tasks folder with starter files (`carry_over_tasks.md`, `task_log.md`) if they don't already exist.
+7. Commit and push the personal repo (`init: bootstrap workflows repo`).
+8. Compute `company_zone_hashes` for each of the 6 skills from the files just copied — see **Stripping company zones** below.
+9. Write `.workflows.json`: `company` from step 1, `upstream: "jojomitrou/company-workflows"`, `upstream_ref` = `gh api repos/jojomitrou/company-workflows/commits/main --jq .sha`, `personal_repo`/`personal_path` from steps 3–4, `sync_skills` = the 6 names, the hashes from step 8, `pin_updates: false`.
 
 Confirm:
-> *"Done — your workflows repo is live at https://github.com/[username]/[name]. All future skill updates will come from there, and your task history now lives there too."*
+> *"Done — your workflows repo is live at [url]. `/prep` is now the only place skill updates come from — you'll never need to re-run an install command again."*
 
 ---
 
-**If the config file EXISTS — normal sync:**
+**If the three old dotfiles exist but `.workflows.json` doesn't — migrate (one-time, automatic):**
 
-1. Read local path (line 1) from `$env:USERPROFILE\.claude\.workflows-repo`
-2. Pull latest: `git -C "[localPath]" pull`
-3. Read stored hash from `$env:USERPROFILE\.claude\.skills-hash` — if missing, treat as first sync
-4. Get current HEAD: `git -C "[localPath]" rev-parse HEAD`
-5. Compare:
-   - **Same hash:** do nothing, show nothing, move on
-   - **Different hash (or no hash file):**
-     a. Get changed files, scoped to the 6 core skills only: `git -C "[localPath]" log --oneline --name-only [old-hash]..HEAD -- skills/prep skills/wrap skills/week skills/month skills/quarter skills/radar`
-        (the repo may contain other skills too — those are opt-in personal installs, never auto-synced down)
-     b. Copy just those 6: `Copy-Item -Recurse "[localPath]\skills\{prep,wrap,week,month,quarter,radar}" "$env:USERPROFILE\.claude\skills\" -Force`
-     c. Write new hash to `$env:USERPROFILE\.claude\.skills-hash`
-     d. Extract updated skill names and include in briefing box
+1. Build `.workflows.json`: `personal_path`/`personal_repo` from `.workflows-repo`'s two lines; `company` from `.company` (omit the field if that file's missing); `upstream: "jojomitrou/company-workflows"`; `sync_skills` = the 6 core skills; `pin_updates: false`.
+2. Set `upstream_ref` to the **current** upstream HEAD (`gh api repos/jojomitrou/company-workflows/commits/main --jq .sha`) — there's no earlier recorded position to resume from, so "right now" becomes the baseline.
+3. For each of the 6 skills, compute `company_zone_hashes[skill]` from the **current local file** (see Stripping company zones below). Any company-zone hand-edit made before today quietly becomes the new accepted baseline on this one pass — normal edit-detection resumes on the next real update.
+4. Cleanup offer — count folders in `[personal_path]/skills/` that aren't one of the 6 core skills. If more than zero, ask once:
+   > *"Your workflows repo has {N} extra skills synced in from before (e.g. GSD packs) — never meant to be tracked here. Remove them from the repo? They stay installed locally — this only stops them being tracked in `daily_workflows`."*
+   - Yes: `git -C "[personal_path]" tag "pre-cleanup-{today}"` first (recoverable), then `git -C "[personal_path]" rm -r skills/{name}` for each extra folder, commit, push.
+   - No / not now: skip, don't ask again this migration.
+5. Rename the three old files to `.bak` (never delete outright): `.workflows-repo.bak`, `.company.bak`, `.skills-hash.bak`.
+6. Write `.workflows.json`.
 
-*(This whole-file copy is the known limitation this version still has — the anchored personal-zone-preserving update engine is the next phase, tracked separately. Until then, treat re-running this step as safe only because your own personal additions live in the `<!-- personal:... -->` blocks below, which you maintain by hand if you touch this file directly.)*
+Note once in the briefing: *"Migrated to the new update system — nothing lost, old config backed up as `.bak`."*
+
+---
+
+**Stripping company zones** (used by the hash step above and the update algorithm below):
+
+Find every `<!-- personal:NAME:start -->` … `<!-- personal:NAME:end -->` pair in the file and delete everything strictly between the two anchor lines, keeping the anchor lines themselves. What's left is the "company-zone skeleton." To hash it: write the skeleton to a temp file and run `Get-FileHash -Algorithm SHA256 -Path [tempfile] | Select-Object -ExpandProperty Hash`.
+
+> **Encoding warning (found the hard way during B1 testing):** Windows PowerShell 5.1's default `Get-Content -Raw` / `Set-Content -Encoding utf8` mangles em-dashes and arrows on read (codepage mojibake) — it silently corrupts every skill file it touches. Read and write with explicit UTF-8, no BOM, instead: `[System.IO.File]::ReadAllText($path, [System.Text.Encoding]::UTF8)` to read, and a `New-Object System.Text.UTF8Encoding $false` writer (`[System.IO.File]::WriteAllText($path, $content, $utf8NoBom)`) to write. Do this for every read/write in this update algorithm, not just the hashing step.
+
+---
+
+**Every run — check for updates** (after bootstrap/migration, if either ran):
+
+1. `gh api repos/{upstream}/commits/main --jq .sha` → call it `latest`. If this call fails (offline, unreachable) — skip the rest of this section silently, note *"update check skipped (offline)"* in the briefing, never block `/prep` on it.
+2. If `latest == upstream_ref`: nothing to do, say nothing, move on.
+3. If `pin_updates: true`: note *"updates available (pinned)"* in the briefing, apply nothing, move on.
+4. Otherwise, shallow-clone upstream once for this run: `git clone --depth 1 https://github.com/{upstream} "$env:TEMP\cw-update"`.
+5. For each skill in `sync_skills`:
+   a. Not installed locally yet (new skill added upstream since your last update)? Copy it straight in from the clone, note it as newly installed, move to the next skill.
+   b. Read local file `L` and upstream file `U` (from the clone).
+   c. Extract every `<!-- personal:NAME:start/end -->` block from `L` into a map `{NAME: content}`.
+   d. Strip `L`'s company zones and hash the result — compare to `company_zone_hashes[skill]`.
+      - **Match** → you haven't touched the company zone since the last update — proceed.
+      - **Mismatch** → you edited inside the company zone. Save the full current `L` to `[personal_path]\backups\{skill}-{today}.md`, commit + push that backup to the personal repo, then proceed with the update anyway. Queue a loud briefing line: *"Your edits inside /{skill}'s company zone were preserved at `backups/{skill}-{today}.md` — move anything you want to keep into a personal block."*
+   e. Take `U` wholesale as the new content. For each `{NAME: content}` extracted from `L`, find the matching `<!-- personal:NAME:start/end -->` pair in `U` and insert `content` between them.
+      - Anchor missing in `U` (upstream removed or renamed it)? Append the orphaned content under a `## Recovered personal content` heading at the end of `U` instead, and note it in the briefing. Personal content is never deleted by an update — worst case it lands at the end of the file with a notice.
+   f. Write the merged result to `~/.claude/skills/{skill}/SKILL.md`.
+   g. Recompute `company_zone_hashes[skill]` from the merged file.
+6. Delete the temp clone: `Remove-Item -Recurse -Force "$env:TEMP\cw-update"`.
+7. Before deleting it, read `docs/CHANGELOG.md` from the clone and pull the entries for whichever skills changed — these become the briefing's `🆕 SKILLS UPDATED` lines.
+8. Set `upstream_ref = latest`, write `.workflows.json`.
+
+*(The setup guide's Step 7 install one-liner is install-only — first run. This update check is the only update channel; never re-run the install one-liner to "update" — it would blow past this whole mechanism with a raw overwrite.)*
+
+---
+
+**Keeping task files fresh across machines:** before Phase 2 reads them, run `git -C "[personal_path]" pull` (best-effort — if it fails, e.g. offline, just proceed with the local copy, no error shown).
 
 ---
 
@@ -319,3 +351,8 @@ After printing, ask only: **"Anything to add or move between buckets?"** — adj
 3. Never re-ask a question another skill owns (Phase 0 owns all cadence-boundary questions; `/wrap` owns end-of-session).
 4. Never show ⚠️ for a service dressed up as broken when it was simply never set up, once the role-based install list exists to tell the difference.
 5. Never store task files outside the personal repo.
+6. Never `Copy-Item -Force` a company skill file — the extract-reinject algorithm in 1d is the only write path.
+7. Never delete or overwrite personal-block content, on update or migration — worst case it's recovered at the end of the file with a notice.
+8. Never resolve a company-zone edit silently — back it up and say so, in either direction.
+9. Never ship an upstream skill release without a version bump and a `docs/CHANGELOG.md` line.
+10. Never reintroduce a second update channel — the setup guide's install one-liner is first-run only, `/prep` is the only updater.
