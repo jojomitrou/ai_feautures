@@ -13,3 +13,4 @@
 | C4 admin view | pending | | |
 | D1 progress export | pending | | |
 | D2 rewards-mcp productivity dataset | pending (lives on rewards-mcp backlog) | | |
+| A4 radar skill (generalized, self-learning cache) | DONE — see docs/CHANGELOG.md 2026-07-21 | 2026-07-21 | generalized from personal keyword→repo router; ships as 6th core skill, prep/wrap updated to sync it; local machine migrated (real 14-row table rescued into personal zone, marked confirmed) |

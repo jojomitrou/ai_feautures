@@ -1,7 +1,7 @@
 ---
 name: prep
 description: Use at the start of every VS Code session to run the daily workflow kickoff — verifies critical connections, ensures all work is saved to GitHub, gathers context, and organises the day into Must Do, Should Do, and Check Later.
-version: 2.0
+version: 2.1
 origin: company
 ---
 
@@ -118,8 +118,8 @@ Say:
 3. Create the repo: `gh repo create [username]/daily_workflows --private`
 4. Clone it to `C:\Users\[username]\Documents\git repos\daily_workflows`:
    `git clone https://github.com/[username]/daily_workflows "C:\Users\[username]\Documents\git repos\daily_workflows"`
-5. Copy only the 5 core skills into it (never the whole local skills folder — other locally-installed skills are personal/opt-in, not team-shared):
-   `Copy-Item -Recurse "$env:USERPROFILE\.claude\skills\{prep,wrap,week,month,quarter}" "C:\Users\[username]\Documents\git repos\daily_workflows\skills\" -Force`
+5. Copy only the 6 core skills into it (never the whole local skills folder — other locally-installed skills are personal/opt-in, not team-shared):
+   `Copy-Item -Recurse "$env:USERPROFILE\.claude\skills\{prep,wrap,week,month,quarter,radar}" "C:\Users\[username]\Documents\git repos\daily_workflows\skills\" -Force`
 6. Create the tasks folder with empty starter files:
    `New-Item -ItemType Directory -Force "C:\Users\[username]\Documents\git repos\daily_workflows\tasks"`, then write a minimal `carry_over_tasks.md` (`# Carry-Over Tasks`) and `task_log.md` (`# Task Log`) if they don't already exist.
 7. Commit and push:
@@ -149,9 +149,9 @@ Confirm:
 5. Compare:
    - **Same hash:** do nothing, show nothing, move on
    - **Different hash (or no hash file):**
-     a. Get changed files, scoped to the 5 core skills only: `git -C "[localPath]" log --oneline --name-only [old-hash]..HEAD -- skills/prep skills/wrap skills/week skills/month skills/quarter`
+     a. Get changed files, scoped to the 6 core skills only: `git -C "[localPath]" log --oneline --name-only [old-hash]..HEAD -- skills/prep skills/wrap skills/week skills/month skills/quarter skills/radar`
         (the repo may contain other skills too — those are opt-in personal installs, never auto-synced down)
-     b. Copy just those 5: `Copy-Item -Recurse "[localPath]\skills\{prep,wrap,week,month,quarter}" "$env:USERPROFILE\.claude\skills\" -Force`
+     b. Copy just those 6: `Copy-Item -Recurse "[localPath]\skills\{prep,wrap,week,month,quarter,radar}" "$env:USERPROFILE\.claude\skills\" -Force`
      c. Write new hash to `$env:USERPROFILE\.claude\.skills-hash`
      d. Extract updated skill names and include in briefing box
 
